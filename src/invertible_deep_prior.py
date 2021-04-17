@@ -28,15 +28,6 @@ class InvertibleDeepPrior(object):
             self.device = torch.device('cpu')
             torch.set_default_tensor_type('torch.FloatTensor')
 
-        self.sigma = args.sigma
-
-    def fwd_op(self, x):
-        return x + self.sigma*torch.randn(x.shape).to(self.device)
-
-    def objective(self, pred, obs):
-        return (1.0/(2.0*self.sigma_squared))*torch.norm(pred.reshape(-1) - \
-            obs.repeat(self.batchsize, 1, 1, 1).reshape(-1))**2
-
     def train(self, args):
 
         x, spacing, shape = get_model()
