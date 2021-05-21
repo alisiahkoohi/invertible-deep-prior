@@ -4,19 +4,21 @@ import sys
 import torch
 import numpy as np
 from invertible_deep_prior import InvertibleDeepPrior
+from deep_prior import DeepPrior
 from utils import git_root
 np.random.seed(19)
 torch.manual_seed(19)
 
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--max_itr', dest='max_itr', type=int, default=501)
-parser.add_argument('--sigma', dest='sigma', type=float, default=0.01)
+parser.add_argument('--sigma', dest='sigma', type=float, default=0.002)
 parser.add_argument('--lr', dest='lr', type=float, default=1e-3)
 parser.add_argument('--weight_decay', dest='weight_decay', type=float,
-                    default=1e-6)
+                    default=1e-1)
 parser.add_argument('--experiment', dest='experiment',
                     default='invertible-deep-prior')
 parser.add_argument('--cuda', dest='cuda', type=int, default=0)
+parser.add_argument('--invertible', dest='invertible', type=int, default=0)
 
 args = parser.parse_args()
 
@@ -31,7 +33,11 @@ def main():
         print("ERROR: Cuda is not available, try running on CPU")
         sys.exit(1)
 
-    model = InvertibleDeepPrior(args)
+    if args.invertible:
+        model = InvertibleDeepPrior(args)
+    else:
+        model = DeepPrior(args)
+
     model.train(args)
 
 if __name__ == '__main__':
